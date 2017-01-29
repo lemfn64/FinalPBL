@@ -1,5 +1,8 @@
 package app.pbl.hcc.pblapp;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,20 +23,22 @@ import android.widget.TextView;
 public class MainMenu extends AppCompatActivity {
 
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * Variables
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+    public static boolean logged = false;
+    public static String email = null;
+    public  static String password = null;
+    public static String name = null;
+    public static int position = 999;
+    public static  int chapterCode = 999;
+    private SharedPreferences storage;
 
     /**
-     * The {@link ViewPager} that will host the section contents.
+     * method called at the begining of the app
+     * @param savedInstanceState
      */
-    private ViewPager mViewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,19 +46,40 @@ public class MainMenu extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+        // Create the adapter that will return a fragment for each of the tabs
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        //link tab layout and set its view pager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        //set storage
+        storage = getSharedPreferences("savePreference", Context.MODE_PRIVATE);
+        //check for log in info in storage if not send to log in
+        if(!logged) {
+            if (storage.getString("user", null)==null) {
+                startActivity(new Intent(this, LoginActivity.class));
+            }
+            else {
+                email = storage.getString("user", null);
+                password = storage.getString("password", null);
+                name = storage.getString("name", null);
+                chapterCode = storage.getInt("chapterCode", 999);
+                position = storage.getInt("position", 999);
+            }
+        }
+
     }
 
-
+    /**
+     * creat the corner menu for more options
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -61,24 +87,31 @@ public class MainMenu extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * handles corner menu and its clicks
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_account) {
+            if (!logged) {
+                startActivity(new Intent(this, LoginActivity.class));
+            } else {
+                    return true;
+                // go to manage account
+            }
         }
+
 
         return super.onOptionsItemSelected(item);
     }
 
     /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
+     * page adopter used to mannage Fragments, its contents and views
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -86,6 +119,11 @@ public class MainMenu extends AppCompatActivity {
             super(fm);
         }
 
+        /**
+         * defines class and view for each tab
+         * @param position
+         * @return
+         */
         @Override
         public Fragment getItem(int position) {
             switch (position) {
@@ -107,10 +145,15 @@ public class MainMenu extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
+            // number of tabs
             return 4;
         }
 
+        /**
+         * defines tab titles
+         * @param position
+         * @return
+         */
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
