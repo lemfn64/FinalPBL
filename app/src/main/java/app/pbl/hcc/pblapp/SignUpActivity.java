@@ -3,12 +3,11 @@ package app.pbl.hcc.pblapp;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -21,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,7 +30,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,11 +39,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +50,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -69,38 +65,89 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mNameView;
+    private EditText mPositionView;
+    private EditText mChapterCodeView;
     private View mProgressView;
     private View mLoginFormView;
-    private CheckBox remeberView;
-    private SharedPreferences storage;
-    private boolean checked;
-    private SharedPreferences.Editor editor;
-    private DatabaseReference userDatabase;
-    public static boolean runing=false;
-    public static FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private String mEmail ="";
-    private String mPassword ="";
-    private boolean attempt = false;
-    private boolean automatic = false;
+    private FirebaseAuth mAuth;
+    private DatabaseReference userDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        runing=true;
+        setContentView(R.layout.activity_sign_up);
 
         //set database
         userDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        mAuth = LoginActivity.mAuth;
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d("signup", "onAuthStateChanged:signed_in:" + user.getUid());
+                    if (LoginActivity.isRuning()) {
+                        Intent openActivity = new Intent(SignUpActivity.this, LoginActivity.class);
+                        openActivity.setFlags(AccessibilityNodeInfoCompat.ACTION_SET_SELECTION);
+                        startActivity(openActivity);
+                        finish();
+                    } else {
+                        startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                        finish();
+                    }
+                } else {
+                    // User is signed out
+                    Log.d("signup", "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
 
-        // link UI with code.
+        // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
-        remeberView = (CheckBox) findViewById(R.id.remeber);
-
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                    attemptLogin();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mNameView= (EditText) findViewById(R.id.name);
+        mNameView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                    attemptLogin();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mPositionView = (EditText) findViewById(R.id.position);
+        mPositionView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                    attemptLogin();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mChapterCodeView = (EditText) findViewById(R.id.chapter_code);
+        mChapterCodeView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -115,172 +162,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                checked = remeberView.isChecked();
                 attemptLogin();
-            }
-        });
-
-        Button mSignUpButton = (Button) findViewById(R.id.button_sign_up);
-        mSignUpButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-        // set storage for remember me
-        storage = getSharedPreferences("savePreference", Context.MODE_PRIVATE);
-        editor= storage.edit();
-
-        //set database
-        mAuth = FirebaseAuth.getInstance();
-
-        //check for log in
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    ValueEventListener userListener = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (attempt) {
-                                Log.d("auth", "attempt");
-                                if(automatic) {
-                                    Log.d("auth", "automatic");
-                                    MainMenu.logged=true;
-                                    MainMenu.userInfo = new User(storage.getString("user", null), storage.getString("password", null), storage.getString("name", null), storage.getInt("chapterCode", 999), storage.getInt("position", 999));
-                                }
-                                else {
-                                    Log.d("auth", "not auto");
-                                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                                        if (postSnapshot.getKey().equals(mEmail.replace(".","@"))) {
-                                            MainMenu.userInfo = postSnapshot.getValue(User.class);
-                                            MainMenu.logged = true;
-                                            if (checked) {
-                                                //remember me
-                                                Log.d("auth", "remember");
-                                                editor.putString("user", mEmail);
-                                                editor.putString("password", mPassword);
-                                                editor.putString("name", MainMenu.userInfo.getName());
-                                                editor.putInt("postion", MainMenu.userInfo.getPosition());
-                                                editor.putInt("chapterCode", MainMenu.userInfo.getChapterCode());
-                                                Log.d("auth", storage.getString("user", null));
-                                            } else {
-                                                editor.putString("user", null);
-                                                editor.putString("password", null);
-                                                editor.putString("name", null);
-                                                editor.putInt("chapterCode", 999);
-                                                editor.putInt("position", 999);
-                                            }
-                                            showProgress(false);
-                                            finish();
-                                        }
-                                    }
-                                    if(!MainMenu.logged){
-                                        //Log.d("failed login", (String) dataSnapshot.getKey());
-                                        //Log.d("failed login", (String) postSnapshot.getKey());
-                                        Toast.makeText(LoginActivity.this, R.string.auth_failed,
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            // Getting info failed
-                            Log.w("get info", "loadPost:onCancelled", databaseError.toException());
-                        }
-                    };
-                    userDatabase.addListenerForSingleValueEvent(userListener);
-
-                } else {
-                    // User is signed out
-                }
-            }
-        };
-
-        //check if user is saved on storage
-        if (storage.getString("user", null)==null) {
-            //empty user
-            Log.d("storage", "empty");
-            MainMenu.userInfo = new User("","","",999,999);
-        }
-        else {
-            Log.d("storage", "saved");
-            attempt=true;
-            automatic= true;
-            mAuth.signInWithEmailAndPassword(storage.getString("user", null), storage.getString("password", null))
-                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            // succesfully sign in
-                            // If sign in fails, display a message to the user. If sign in succeeds
-                            // the auth state listener will be notified and logic to handle the
-                            // signed in user can be handled in the listener.
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Automatic login failed please login", Toast.LENGTH_SHORT).show();
-                                //empty user
-                                MainMenu.userInfo = new User("","","",999,999);
-                            }
-                        }
-                    });
-        }
     }
 
-    /**
-     * stops running
-     */
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        runing = false;
-    }
-
-    /**
-     * keeps user in log in until he logs in
-     * @param keyCode
-     * @param event
-     * @return
-     */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (keyCode == KeyEvent.KEYCODE_BACK ) {
-            // do nothing stay in activity
-            return false;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    /**
-     * starts aunthentication handler
-     */
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    /**
-     * stops authentication handler
-     */
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
-    public static boolean isRuning() {
-        return runing;
-    }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -339,16 +228,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mPositionView.setError(null);
+        mNameView.setError(null);
+        mChapterCodeView.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String name = mNameView.getText().toString();
+        String positiontxt = mPositionView.getText().toString();
+        String chapterCodetxt = mChapterCodeView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-
-        // Check for a valid email address.
+        // Check for a valid values address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
@@ -357,11 +251,41 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
-        } else if (TextUtils.isEmpty(password)) {
+        }
+
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
         }
+
+        if (TextUtils.isEmpty(name)) {
+            mNameView.setError(getString(R.string.error_field_required));
+            focusView = mNameView;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(positiontxt)) {
+            mPositionView.setError(getString(R.string.error_field_required));
+            focusView = mPositionView;
+            cancel = true;
+        } else if (!isCodeValid(positiontxt)) {
+            mPositionView.setError(getString(R.string.error_invalid_code));
+            focusView = mPositionView;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(chapterCodetxt)) {
+            mChapterCodeView.setError(getString(R.string.error_field_required));
+            focusView = mChapterCodeView;
+            cancel = true;
+        } else if (!isCodeValid(positiontxt)) {
+            mChapterCodeView.setError(getString(R.string.error_invalid_code));
+            focusView = mChapterCodeView;
+            cancel = true;
+        }
+
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -369,8 +293,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            int position = Integer.parseInt(mPositionView.getText().toString());
+            int chapterCode = Integer.parseInt(mChapterCodeView.getText().toString());
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, name, position, chapterCode);
             mAuthTask.execute((Void) null);
         }
     }
@@ -379,6 +305,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return email.contains("@");
     }
 
+    private boolean isCodeValid(String code) {
+        return code.length() >6 && code.length() < 9;
+    }
 
     /**
      * Shows the progress UI and hides the login form.
@@ -453,7 +382,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
+                new ArrayAdapter<>(SignUpActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -476,28 +405,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        UserLoginTask(String email, String password) {
+        private final String mEmail;
+        private final String mPassword;
+        private final String mName;
+        private final int mPosition;
+        private final int mChapterCode;
+
+        UserLoginTask(String email, String password, String name, int position, int chapterCode) {
             mEmail = email;
             mPassword = password;
+            mName = name;
+            mPosition = position;
+            mChapterCode = chapterCode;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            mAuth.signInWithEmailAndPassword(mEmail, mPassword)
-                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+            // creat account
+            mAuth.createUserWithEmailAndPassword(mEmail, mPassword)
+                    .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()) {
-                                attempt=true;
-                                Log.d("auth", "signInWithEmail:onComplete:" + task.isSuccessful());
+                            if (!task.isSuccessful()) {
+                                Log.d("signup", "createUserWithEmail:onComplete:" + task.isSuccessful());
                             }
                             // If sign in fails, display a message to the user. If sign in succeeds
                             // the auth state listener will be notified and logic to handle the
                             // signed in user can be handled in the listener.
                             if (!task.isSuccessful()) {
-                                showProgress(false);
-                                Log.d("auth", "signInWithEmail:failed", task.getException());
-                                mEmailView.setError(getString(R.string.error_incorrect_credentials));
+                                Toast.makeText(SignUpActivity.this, R.string.auth_failed,
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -508,9 +445,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             if (success) {
-                //showProgress(false);
+                Log.d("login","creating user");
+                User user = new User(mEmail,mPassword,mName,mChapterCode,mPosition);
+                userDatabase.child(mEmail.replace(".", "@")).setValue(user);
+                showProgress(false);
+                if (LoginActivity.isRuning()) {
+                    Intent openActivity = new Intent(SignUpActivity.this, LoginActivity.class);
+                    openActivity.setFlags(AccessibilityNodeInfoCompat.ACTION_SET_SELECTION);
+                    startActivity(openActivity);
+                    finish();
+                } else {
+                    startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                    finish();
+                }
+                SignUpActivity.this.finish();
+                finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_credentials));
+                showProgress(false);
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
         }

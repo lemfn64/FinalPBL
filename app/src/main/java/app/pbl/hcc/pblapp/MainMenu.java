@@ -39,8 +39,8 @@ public class MainMenu extends AppCompatActivity {
     public static boolean logged = false;
     public static User userInfo;
     private SharedPreferences storage;
-    public static FirebaseAuth mAuth;
-    public FirebaseAuth.AuthStateListener mAuthListener;
+    public static boolean runing=false;
+
 
     /**
      * method called at the begining of the app
@@ -50,6 +50,8 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        runing=true;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,100 +69,23 @@ public class MainMenu extends AppCompatActivity {
         //set storage
         storage = getSharedPreferences("savePreference", Context.MODE_PRIVATE);
 
-        //set database
-        mAuth = FirebaseAuth.getInstance();
-
-        //check for log in info in storage if not send to log in
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                } else {
-                    // User is signed out
-                    if (storage.getString("user", null)==null) {
-                        //empty user
-                        userInfo = new User("","","",999,999);
-                        // start log in
-                        startActivity(new Intent(MainMenu.this, LoginActivity.class));
-                    }
-                    else {
-                        mAuth.signInWithEmailAndPassword(storage.getString("user", null), storage.getString("password", null))
-                                .addOnCompleteListener(MainMenu.this, new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        // succesfully sign in
-                                        logged=true;
-                                        userInfo = new User(storage.getString("user", null), storage.getString("password", null), storage.getString("name", null), storage.getInt("chapterCode", 999), storage.getInt("position", 999));
-                                        // If sign in fails, display a message to the user. If sign in succeeds
-                                        // the auth state listener will be notified and logic to handle the
-                                        // signed in user can be handled in the listener.
-                                        if (!task.isSuccessful()) {
-                                            Toast.makeText(MainMenu.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
-                                            //empty user
-                                            userInfo = new User("","","",999,999);
-                                            // start log in
-                                            startActivity(new Intent(MainMenu.this, LoginActivity.class));
-                                        }
-                                    }
-                                });
-                    }
-                }
-            }
-        };
-
+        // chacks if user is log in if not send to log in activity
         if(!logged) {
             Log.d("auth_failed", "catched by log in");
-            // User is signed out
-            if (storage.getString("user", null)==null) {
-                //empty user
-                userInfo = new User("","","",999,999);
-                // start log in
-                startActivity(new Intent(MainMenu.this, LoginActivity.class));
-            }
-            else {
-                mAuth.signInWithEmailAndPassword(storage.getString("user", null), storage.getString("password", null))
-                        .addOnCompleteListener(MainMenu.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                // succesfully sign in
-                                logged=true;
-                                userInfo = new User(storage.getString("user", null), storage.getString("password", null), storage.getString("name", null), storage.getInt("chapterCode", 999), storage.getInt("position", 999));
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
-                                if (!task.isSuccessful()) {
-                                    Toast.makeText(MainMenu.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
-                                    //empty user
-                                    userInfo = new User("","","",999,999);
-                                    // start log in
-                                    startActivity(new Intent(MainMenu.this, LoginActivity.class));
-                                }
-                            }
-                        });
-            }
+            // start log in
+            startActivity(new Intent(MainMenu.this, LoginActivity.class));
         }
     }
 
-    /**
-     * starts aunthentication handler
-     */
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+    public static boolean isRuning() {
+        return runing;
     }
 
-    /**
-     * stops authentication handler
-     */
     @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
+    public void onResume() {
+        super.onResume();
+        //prepares menu for changes
+        invalidateOptionsMenu();
     }
 
     /**
@@ -174,6 +99,19 @@ public class MainMenu extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main_menu, menu);
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if(logged){
+            menu.findItem(R.id.action_log).setTitle(R.string.action_log_out);
+        }
+        else {
+            menu.findItem(R.id.action_log).setTitle(R.string.action_log);
+        }
+        return true;
+    }
+
 
     /**
      * handles corner menu and its clicks
@@ -191,6 +129,22 @@ public class MainMenu extends AppCompatActivity {
             } else {
                     return true;
                 // go to manage account
+            }
+        }
+        if(id==R.id.action_log){
+            if(logged) {
+                userInfo = new User();
+                logged = false;
+                SharedPreferences.Editor editor = storage.edit();
+                editor.putString("user", null);
+                editor.putString("password", null);
+                editor.putString("name", null);
+                editor.putInt("chapterCode", 999);
+                editor.putInt("position", 999);
+                startActivity(new Intent(this, LoginActivity.class));
+            }
+            else {
+                startActivity(new Intent(this, LoginActivity.class));
             }
         }
 
@@ -257,4 +211,5 @@ public class MainMenu extends AppCompatActivity {
             return null;
         }
     }
+
 }
