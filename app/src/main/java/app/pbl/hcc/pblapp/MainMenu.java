@@ -3,6 +3,7 @@ package app.pbl.hcc.pblapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -28,12 +37,10 @@ public class MainMenu extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     public static boolean logged = false;
-    public static String email = null;
-    public  static String password = null;
-    public static String name = null;
-    public static int position = 999;
-    public static  int chapterCode = 999;
+    public static User userInfo;
     private SharedPreferences storage;
+    public static FirebaseAuth mAuth;
+    public FirebaseAuth.AuthStateListener mAuthListener;
 
     /**
      * method called at the begining of the app
@@ -59,20 +66,101 @@ public class MainMenu extends AppCompatActivity {
 
         //set storage
         storage = getSharedPreferences("savePreference", Context.MODE_PRIVATE);
+
+        //set database
+        mAuth = FirebaseAuth.getInstance();
+
         //check for log in info in storage if not send to log in
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                } else {
+                    // User is signed out
+                    if (storage.getString("user", null)==null) {
+                        //empty user
+                        userInfo = new User("","","",999,999);
+                        // start log in
+                        startActivity(new Intent(MainMenu.this, LoginActivity.class));
+                    }
+                    else {
+                        mAuth.signInWithEmailAndPassword(storage.getString("user", null), storage.getString("password", null))
+                                .addOnCompleteListener(MainMenu.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        // succesfully sign in
+                                        logged=true;
+                                        userInfo = new User(storage.getString("user", null), storage.getString("password", null), storage.getString("name", null), storage.getInt("chapterCode", 999), storage.getInt("position", 999));
+                                        // If sign in fails, display a message to the user. If sign in succeeds
+                                        // the auth state listener will be notified and logic to handle the
+                                        // signed in user can be handled in the listener.
+                                        if (!task.isSuccessful()) {
+                                            Toast.makeText(MainMenu.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
+                                            //empty user
+                                            userInfo = new User("","","",999,999);
+                                            // start log in
+                                            startActivity(new Intent(MainMenu.this, LoginActivity.class));
+                                        }
+                                    }
+                                });
+                    }
+                }
+            }
+        };
+
         if(!logged) {
+            Log.d("auth_failed", "catched by log in");
+            // User is signed out
             if (storage.getString("user", null)==null) {
-                startActivity(new Intent(this, LoginActivity.class));
+                //empty user
+                userInfo = new User("","","",999,999);
+                // start log in
+                startActivity(new Intent(MainMenu.this, LoginActivity.class));
             }
             else {
-                email = storage.getString("user", null);
-                password = storage.getString("password", null);
-                name = storage.getString("name", null);
-                chapterCode = storage.getInt("chapterCode", 999);
-                position = storage.getInt("position", 999);
+                mAuth.signInWithEmailAndPassword(storage.getString("user", null), storage.getString("password", null))
+                        .addOnCompleteListener(MainMenu.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                // succesfully sign in
+                                logged=true;
+                                userInfo = new User(storage.getString("user", null), storage.getString("password", null), storage.getString("name", null), storage.getInt("chapterCode", 999), storage.getInt("position", 999));
+                                // If sign in fails, display a message to the user. If sign in succeeds
+                                // the auth state listener will be notified and logic to handle the
+                                // signed in user can be handled in the listener.
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(MainMenu.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
+                                    //empty user
+                                    userInfo = new User("","","",999,999);
+                                    // start log in
+                                    startActivity(new Intent(MainMenu.this, LoginActivity.class));
+                                }
+                            }
+                        });
             }
         }
+    }
 
+    /**
+     * starts aunthentication handler
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    /**
+     * stops authentication handler
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     /**

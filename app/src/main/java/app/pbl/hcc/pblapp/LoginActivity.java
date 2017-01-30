@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +33,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,11 +81,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private SharedPreferences storage;
     private boolean checked;
     private SharedPreferences.Editor editor;
+    private DatabaseReference userDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //set database
+        userDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+
         // link UI with code.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -321,33 +339,60 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+            MainMenu.mAuth.signInWithEmailAndPassword(mEmail, mPassword)
+                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()){
+                                Log.d("auth", "signInWithEmail:onComplete:" + task.isSuccessful());
+                                ValueEventListener userListener = new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                                            if ( dataSnapshot.getKey().equals(mEmail)) {
+                                                MainMenu.userInfo = postSnapshot.getValue(User.class);
+                                            } else {
+                                                Log.d("failed login", (String) dataSnapshot.getKey());
+                                                Log.d("failed login", (String) postSnapshot.getKey());
+                                            }
+                                        }
+                                    }
 
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    if (pieces[1].equals(mPassword)) {
-                        if (checked) {
-                            editor.putString("user", mEmail);
-                            editor.putString("password", mPassword);
-                            //other parameters
-                            return true;
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        // Getting info failed
+                                        Log.w("get info", "loadPost:onCancelled", databaseError.toException());
+                                    }
+                                };
+                                userDatabase.addListenerForSingleValueEvent(userListener);
+                                MainMenu.logged= true;
+                                if (checked) {
+                                    //remember me
+                                    editor.putString("user", mEmail);
+                                    editor.putString("password", mPassword);
+                                    editor.putString("name", MainMenu.userInfo.getName());
+                                    editor.putInt("postion", MainMenu.userInfo.getPosition());
+                                    editor.putInt("chapterCode", MainMenu.userInfo.getChapterCode());
+                                }
+                                else {
+                                    editor.putString("user", null);
+                                    editor.putString("password", null);
+                                    editor.putString("name",null);
+                                    editor.putInt("chapterCode", 999);
+                                    editor.putInt("position", 999);
+                                }
+                            }
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Log.w("auth", "signInWithEmail:failed", task.getException());
+                                Toast.makeText(LoginActivity.this, R.string.auth_failed,
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else {
-                            editor.putString("user", null);
-                            editor.putString("password", null);
-                            editor.putString("name",null);
-                            editor.putInt("chapterCode", 999);
-                            editor.putInt("position", 999);
-                            return true;
-                        }
-
-                    }
-                }
-            }
-            return false;
+                    });
+            return MainMenu.logged;
         }
 
         @Override
