@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -34,14 +33,15 @@ public class DiscusionUI extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.discusion, container, false);
-        AdapterOrganizer postHandler = new AdapterOrganizer(this.getContext());
         return rootView;
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
-        list= (ListView) getView().findViewById(R.id.list);
+        list= (ListView) getView().findViewById(R.id.list_view);
+        list.setAdapter(new AdapterOrganizer(this.getContext()));
     }
 
 
@@ -51,6 +51,7 @@ public class DiscusionUI extends Fragment {
         Context context;
 
         public AdapterOrganizer(Context context) {
+            posts= new ArrayList<Post>();
             postsDatabase = FirebaseDatabase.getInstance().getReference().child("posts");
             this.context =context;
             ValueEventListener postsListener = new ValueEventListener() {
@@ -73,7 +74,10 @@ public class DiscusionUI extends Fragment {
 
         @Override
         public int getCount() {
-            return posts.size();
+            if (!posts.isEmpty()) {
+                return posts.size();
+            }
+            return 0;
         }
 
         @Override

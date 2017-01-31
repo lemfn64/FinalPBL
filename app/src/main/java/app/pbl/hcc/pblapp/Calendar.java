@@ -62,13 +62,13 @@ public class Calendar extends Fragment {
     public void onResume() {
         super.onResume();
         datePicker = (CalendarView) getView().findViewById(R.id.calendarView);
-        Calendar.AdapterOrganizer eventHandler = new Calendar.AdapterOrganizer(this.getContext());
         datePicker.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 eventDisplayer(year,month,dayOfMonth);
             }
         });
         list = (ListView) getView().findViewById(R.id.list);
+        list.setAdapter( new Calendar.AdapterOrganizer(this.getContext()));
         java.util.Calendar timer = java.util.Calendar.getInstance();
         datePicker.setDate(timer.getTimeInMillis());
         eventDisplayer(timer.get(java.util.Calendar.YEAR), timer.get(java.util.Calendar.MONTH),timer.get(java.util.Calendar.DAY_OF_MONTH));
