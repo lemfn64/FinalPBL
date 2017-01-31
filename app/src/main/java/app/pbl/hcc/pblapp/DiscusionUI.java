@@ -34,9 +34,14 @@ public class DiscusionUI extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.discusion, container, false);
-        list= (ListView) getView().findViewById(R.id.list);
         AdapterOrganizer postHandler = new AdapterOrganizer(this.getContext());
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        list= (ListView) getView().findViewById(R.id.list);
     }
 
 

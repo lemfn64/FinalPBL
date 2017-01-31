@@ -37,6 +37,7 @@ public class Calendar extends Fragment {
     private DatabaseReference eventDatabase;
     private List<Event> events;
     private ArrayList<View> views;
+    private boolean firstRun =true;
 
     /**
      * creats view when called on main menu
@@ -49,6 +50,8 @@ public class Calendar extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.calendar, container, false);
+        events= new ArrayList<Event>();
+        views = new ArrayList<View>();
         return rootView;
     }
 
@@ -112,7 +115,9 @@ public class Calendar extends Fragment {
         if(!found) {
             indicator=0;
         }
-        views.get(indicator).requestFocus();
+        if(!views.isEmpty()){
+            views.get(indicator).requestFocus();
+        }
     }
 
     public class AdapterOrganizer extends BaseAdapter {
