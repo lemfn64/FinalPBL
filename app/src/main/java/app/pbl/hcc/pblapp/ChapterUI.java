@@ -10,12 +10,12 @@ import android.view.ViewGroup;
  * Created by Luis on 1/28/2017.
  */
 
-public class Discusion extends Fragment {
+public class ChapterUI extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.discusion, container, false);
+        View rootView = inflater.inflate(R.layout.chapter, container, false);
         return rootView;
     }
 }

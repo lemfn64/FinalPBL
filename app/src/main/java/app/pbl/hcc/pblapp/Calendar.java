@@ -1,5 +1,6 @@
 package app.pbl.hcc.pblapp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -7,8 +8,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.CalendarView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 /**
@@ -17,8 +32,11 @@ import android.widget.ListView;
 public class Calendar extends Fragment {
 
     //variables use through the class
-    CalendarView datePicker;
-    ListView list;
+    private CalendarView datePicker;
+    private ListView list;
+    private DatabaseReference eventDatabase;
+    private List<Event> events;
+    private ArrayList<View> views;
 
     /**
      * creats view when called on main menu
@@ -41,6 +59,7 @@ public class Calendar extends Fragment {
     public void onResume() {
         super.onResume();
         datePicker = (CalendarView) getView().findViewById(R.id.calendarView);
+        Calendar.AdapterOrganizer eventHandler = new Calendar.AdapterOrganizer(this.getContext());
         datePicker.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 eventDisplayer(year,month,dayOfMonth);
@@ -59,9 +78,113 @@ public class Calendar extends Fragment {
      * @param day
      */
     public void eventDisplayer(int year, int month, int day){
-        String[] info= {String.valueOf(year), String.valueOf(day),String.valueOf(month+1)};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(list.getContext(), android.R.layout.simple_list_item_1 ,info);
-        list.setAdapter(adapter);
+        int date = (year*365)+((month+1)*30)+(day);
+        int datePlus = date;
+        int dateMinus = date;
+        int indicator=0;
+        boolean found = false;
+        for(Event choosen: events) {
+            if(!found){
+                if(choosen.getDate()==date) {
+                    found= true;
+                }
+                indicator++;
+            }
+        }
+        if(!found){
+            indicator=0;
+            for(Event choosen: events) {
+                if(!found){
+                    if(choosen.getDate()==datePlus) {
+                        found= true;
+                    }
+                    else {
+                        if(choosen.getDate()==dateMinus){
+                            found = true;
+                        }
+                    }
+                    datePlus++;
+                    dateMinus--;
+                    indicator++;
+                }
+            }
+        }
+        if(!found) {
+            indicator=0;
+        }
+        views.get(indicator).requestFocus();
+    }
 
+    public class AdapterOrganizer extends BaseAdapter {
+
+        Context context;
+
+        public AdapterOrganizer(Context context) {
+            eventDatabase = FirebaseDatabase.getInstance().getReference().child("events");
+            this.context =context;
+            ValueEventListener eventsListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot postsSnapshot) {
+                    events= new ArrayList<Event>();
+                    views = new ArrayList<View>();
+                    for (DataSnapshot postSnapshot: postsSnapshot.getChildren()) {
+                        Event temp = postSnapshot.getValue(Event.class);
+                        events.add(temp);
+                    }
+                    Collections.sort(events, new dateComparator());
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting info failed
+                    Log.d("get events", "loadPost:onCancelled", databaseError.toException());
+                }
+            };
+            eventDatabase.addValueEventListener(eventsListener);
+        }
+
+        @Override
+        public int getCount() {
+            return events.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return events.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View row=inflater.inflate(R.layout.single_event, parent, false);
+            TextView title = (TextView) row.findViewById(R.id.txt_title);
+            title.setText(events.get(position).getTitle());
+            TextView place = (TextView) row.findViewById(R.id.txt_place);
+            place.setText(events.get(position).getPlace());
+            TextView time = (TextView) row.findViewById(R.id.txt_time);
+            time.setText(events.get(position).getTime());
+            TextView summary = (TextView) row.findViewById(R.id.txt_content);
+            summary.setText(events.get(position).getContent());
+            ImageView chapter_image = (ImageView) row.findViewById(R.id.info_icon);
+            if (events.get(position).getChapterCode()== MainMenu.userInfo.getChapterCode()) {
+                chapter_image.setImageResource(android.R.drawable.star_big_on);
+            }
+            else {
+                chapter_image.setImageResource(android.R.drawable.presence_online);
+            }
+            views.add(row);
+            return null;
+        }
+    }
+
+    class dateComparator implements Comparator<Event> {
+        @Override
+        public int compare(Event a, Event b) {
+            return a.getDate()< b.getDate() ? -1 : a.getDate() == b.getDate() ? 0 : 1;
+        }
     }
 }
