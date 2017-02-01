@@ -8,8 +8,132 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <TextView
-        android:id="@+id/section_label"
+        android:text="Chapter information"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:text="Chapter's School:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+    <TextView
+        android:text="Advisor:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:layout_below="@+id/textView"
+        android:layout_toEndOf="@+id/textView2"
+        android:layout_marginStart="84dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:id="@+id/info_school"
+        android:layout_toStartOf="@+id/info_advisor" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:layout_alignStart="@+id/textView3"
+        android:id="@+id/info_advisor"
+        android:layout_alignBottom="@+id/textView7"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="President:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_school"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView6"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+    <TextView
+        android:text="Vice-President:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_school"
+        android:layout_toEndOf="@+id/info_school"
+        android:id="@+id/textView7"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView6"
+        android:layout_alignParentStart="true"
+        android:id="@+id/info_president"
+        android:layout_toStartOf="@+id/textView7" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView7"
+        android:layout_alignStart="@+id/textView7"
+        android:id="@+id/info_vice"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Treasurer:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_president"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView10"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+    <TextView
+        android:text="Secretary:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_president"
+        android:layout_toEndOf="@+id/info_president"
+        android:id="@+id/textView11"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView10"
+        android:layout_alignParentStart="true"
+        android:id="@+id/info_treasurer"
+        android:layout_toStartOf="@+id/textView11" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView11"
+        android:layout_alignStart="@+id/textView11"
+        android:id="@+id/info_secretary"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Chapter Modifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_treasurer"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/title_modifications"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:id="@+id/modification_list"
+        android:layout_below="@+id/title_modifications" />
 </RelativeLayout>
+
