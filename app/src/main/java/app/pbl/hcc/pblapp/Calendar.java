@@ -38,6 +38,7 @@ public class Calendar extends Fragment {
     private List<Event> events;
     private ArrayList<View> views;
     private boolean firstRun =true;
+    private boolean git;
 
     /**
      * creats view when called on main menu
