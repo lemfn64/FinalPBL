@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="app.pbl.hcc.pblapp.OfficerCodes"
+    tools:showIn="@layout/activity_officer_codes">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/advisor_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Advisor code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/president_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New president code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/vice_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Vice-President Code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="text"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/secretary_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Secretary code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/treasurer_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Treasurer code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/pos1_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Officer 1 code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/pos2_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Officer 2 code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/pos3_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Officer 3 code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/pos4_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Officer 4 code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/pos5_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Officer 5 code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/pos6_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Officer 6 code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/pos7_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Officer 7 code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/pos8_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Officer 8 code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/pos9_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Officer 9 code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:text="Change codes"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:id="@+id/commit_changes" />
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

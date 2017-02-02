@@ -1,6 +1,7 @@
 package app.pbl.hcc.pblapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,7 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Luis on 1/28/2017.
@@ -39,7 +39,8 @@ public class ChapterUI extends Fragment {
     private DatabaseReference chapterDatabase;
     private DatabaseReference userDatabase;
     private Chapter baseChapter;
-    private int privilage;
+    public static int privilage;
+    private View.OnClickListener click;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,11 +49,14 @@ public class ChapterUI extends Fragment {
         chapterDatabase = FirebaseDatabase.getInstance().getReference().child("chapters");
         userDatabase = FirebaseDatabase.getInstance().getReference().child("users");
         return rootView;
+
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
+        modificationsList = (ListView) getView().findViewById(R.id.modification_list);
         president= (TextView) getView().findViewById(R.id.info_president);
         school= (TextView) getView().findViewById(R.id.info_school);
         vice= (TextView) getView().findViewById(R.id.info_vice);
@@ -60,25 +64,51 @@ public class ChapterUI extends Fragment {
         treasurer= (TextView) getView().findViewById(R.id.info_treasurer);
         advisor= (TextView) getView().findViewById(R.id.info_advisor);
         title= (TextView) getView().findViewById(R.id.title_modifications);
-        modificationsList = (ListView) getView().findViewById(R.id.modification_list);
-        positions = new ArrayList<>();
         modifications = new ArrayList<>();
         privilage=0;
+        click = new onClicker();
+        modificationsList.setAdapter(new AdapterOrganizer(this.getContext()));
         ValueEventListener positionListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot postsSnapshot) {
                 for (DataSnapshot postSnapshot: postsSnapshot.getChildren()) {
-                    Chapter temp = postSnapshot.getValue(Chapter.class);
-                    baseChapter= temp;
-                    if(temp.getChapterCode()==MainMenu.userInfo.getChapterCode()){
-                        positions.add(temp.getPresidentID());
-                        positions.add(temp.getVicePresidentID());
-                        positions.add(temp.getSecretaryID());
-                        positions.add(temp.getTresurerID());
-                        positions.add(temp.getAdvisorID());
-                        school.setText(temp.getSchool());
+                    if(Integer.parseInt(postSnapshot.getKey())==MainMenu.userInfo.getChapterCode()){
+                        Log.d("found chpater","hola");
+                        baseChapter=postSnapshot.getValue(Chapter.class);
                     }
                 }
+                title.setVisibility(View.VISIBLE);
+                if(MainMenu.userInfo.getChapterCode()==Integer.parseInt(getResources().getString(R.string.main_chapter))) {
+                    privilage=4;
+                    modifications.add("Create Chapter");
+                    modifications.add("Change Positions Codes");
+                    modifications.add("Create a Discussion");
+                    modifications.add("Make an Announcement");
+                    modifications.add("Make an Event");
+                }
+                else if (baseChapter.getAdvisorID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPresidentID().equals(MainMenu.userInfo.getEmail().replace(".","@"))) {
+                    privilage =3;
+                    modifications.add("Change Positions Codes");
+                    modifications.add("Create a Discussion");
+                    modifications.add("Make an Announcement");
+                    modifications.add("Make an Event");
+                }
+                else if (baseChapter.getVicePresidentID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getSecretaryID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getTresurerID().equals(MainMenu.userInfo.getEmail().replace(".","@")) ) {
+                    privilage =2;
+                    modifications.add("Create a Discussion");
+                    modifications.add("Make an Announcement");
+                    modifications.add("Make an Event");
+                }
+                else if (baseChapter.getPosition1ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition2ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition3ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition4ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition5ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition6ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition7ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition8ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition9ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) ) {
+                    privilage =1;
+                    modifications.add("Make an Announcement");
+                    modifications.add("Make an Event");
+                }
+                else {
+                    privilage =0;
+                    title.setVisibility(View.INVISIBLE);
+                }
+                modificationsList.setAdapter(new ChapterUI.AdapterOrganizer(getContext()));
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -90,20 +120,20 @@ public class ChapterUI extends Fragment {
         ValueEventListener userFinderListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot postsSnapshot) {
-                if(!positions.get(0).isEmpty()) {
-                    president.setText(postsSnapshot.child(positions.get(0).replace(".", "@")).getValue(User.class).getName());
+                if(baseChapter.getPresidentID() != null) {
+                    president.setText(postsSnapshot.child(baseChapter.getPresidentID().replace(".", "@")).getValue(User.class).getName());
                 }
-                if(!positions.get(1).isEmpty()) {
-                    vice.setText(postsSnapshot.child(positions.get(1).replace(".", "@")).getValue(User.class).getName());
+                if(baseChapter.getVicePresidentID()!=null) {
+                    vice.setText(postsSnapshot.child(baseChapter.getVicePresidentID().replace(".", "@")).getValue(User.class).getName());
                 }
-                if(!positions.get(2).isEmpty()) {
-                    secretary.setText(postsSnapshot.child(positions.get(2).replace(".", "@")).getValue(User.class).getName());
+                if(baseChapter.getSecretaryID()!=null) {
+                    secretary.setText(postsSnapshot.child(baseChapter.getSecretaryID().replace(".", "@")).getValue(User.class).getName());
                 }
-                if(!positions.get(3).isEmpty()) {
-                    treasurer.setText(postsSnapshot.child(positions.get(3).replace(".", "@")).getValue(User.class).getName());
+                if(baseChapter.getTresurerID()!=null) {
+                    treasurer.setText(postsSnapshot.child(baseChapter.getTresurerID().replace(".", "@")).getValue(User.class).getName());
                 }
-                if(!positions.get(4).isEmpty()) {
-                    advisor.setText(postsSnapshot.child(positions.get(4).replace(".", "@")).getValue(User.class).getName());
+                if(baseChapter.getAdvisorID()!=null) {
+                    advisor.setText(postsSnapshot.child(baseChapter.getAdvisorID().replace(".", "@")).getValue(User.class).getName());
                 }
             }
             @Override
@@ -113,38 +143,8 @@ public class ChapterUI extends Fragment {
             }
         };
         userDatabase.addListenerForSingleValueEvent(userFinderListener);
-        title.setVisibility(View.VISIBLE);
-        if(MainMenu.userInfo.getChapterCode()==Integer.parseInt(this.getResources().getString(R.string.main_chapter))) {
-            privilage=4;
-            modifications.add("Chapter Management");
-            modifications.add("Change Positions Codes");
-            modifications.add("Create a Discussion");
-            modifications.add("Make an Announcement");
-            modifications.add("Make an Event");
-        }
-        else if (baseChapter.getAdvisorID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPresidentID().equals(MainMenu.userInfo.getEmail().replace(".","@"))) {
-            privilage =3;
-            modifications.add("Change Positions Codes");
-            modifications.add("Create a Discussion");
-            modifications.add("Make an Announcement");
-            modifications.add("Make an Event");
-        }
-        else if (baseChapter.getVicePresidentID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getSecretaryID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getTresurerID().equals(MainMenu.userInfo.getEmail().replace(".","@")) ) {
-            privilage =2;
-            modifications.add("Create a Discussion");
-            modifications.add("Make an Announcement");
-            modifications.add("Make an Event");
-        }
-        else if (baseChapter.getPosition1ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition2ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition3ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition4ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition5ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition6ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition7ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition8ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) || baseChapter.getPosition9ID().equals(MainMenu.userInfo.getEmail().replace(".","@")) ) {
-            privilage =1;
-            modifications.add("Make an Announcement");
-            modifications.add("Make an Event");
-        }
-        else {
-            privilage =0;
-            title.setVisibility(View.INVISIBLE);
-        }
-        modificationsList.setAdapter(new ChapterUI.AdapterOrganizer(this.getContext()));
+
+
     }
 
     public class AdapterOrganizer extends BaseAdapter {
@@ -152,6 +152,7 @@ public class ChapterUI extends Fragment {
         Context context;
 
         public AdapterOrganizer(Context context) {
+            this.context=context;
 
         }
 
@@ -178,8 +179,37 @@ public class ChapterUI extends Fragment {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View row=inflater.inflate(R.layout.single_line_title, parent, false);
             TextView title = (TextView) row.findViewById(R.id.maintxt);
+            row.setOnClickListener(click);
+            row.setTag(modifications.get(position));
             title.setText(modifications.get(position));
-            return null;
+            return row;
+        }
+    }
+
+    private class onClicker implements View.OnClickListener {
+        View temp;
+
+        public onClicker() {
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(((String)v.getTag()).equals("Create Chapter")) {
+                startActivity(new Intent(ChapterUI.this.getContext(), ChapterManagment.class));
+
+            } else if(((String)v.getTag()).equals("Change Positions Codes")) {
+
+            }
+            else if(((String)v.getTag()).equals("Create a Discussion")) {
+
+            }
+            else if(((String)v.getTag()).equals("Make an Announcement")) {
+
+            }
+            else if(((String)v.getTag()).equals("Make an Event")) {
+
+            }
         }
     }
 

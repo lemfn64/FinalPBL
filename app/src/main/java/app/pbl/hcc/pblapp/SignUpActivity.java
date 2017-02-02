@@ -306,7 +306,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     }
 
     private boolean isCodeValid(String code) {
-        return code.length() >6 && code.length() < 9;
+        return code.length() >6 ;
     }
 
     /**

@@ -6,12 +6,101 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="app.pbl.hcc.pblapp.ChapterManagment"
+    android:id="@+id/scroll_managment"
     tools:showIn="@layout/activity_chapter_managment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
 
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/create_chapter_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Chapter code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/create_advisor_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Advisor code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/create_president_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="President code"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/create_school"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Chapter's school"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="text"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/create_district"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Chapter's District"
+                android:imeOptions="actionUnspecified"
+                android:visibility="visible"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:text="Create Chapter"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:id="@+id/create_commit" />
+
+    </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

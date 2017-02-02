@@ -32,6 +32,10 @@
         <activity
             android:name=".ChapterManagment"
             android:label="@string/title_activity_chapter_managment"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OfficerCodes"
+            android:label="@string/title_activity_officer_codes"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

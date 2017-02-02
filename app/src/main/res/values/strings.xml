@@ -23,7 +23,7 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_invalid_code">This code is not in the right format</string>
+    <string name="error_invalid_code">The code has to be 7 digits long</string>
     <string name="error_incorrect_credentials">Wrong email/password</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
@@ -121,6 +121,7 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="title_activity_officer_codes">Officer Codes</string>
 
 
 </resources>

@@ -22,7 +22,7 @@ public class Chapter {
     private String position7ID;
     private String position8ID;
     private String position9ID;
-    private String advisorCode;
+    private int advisorCode;
     private int presidentCode;
     private int vicePresidentCode;
     private int secretaryCode;
@@ -38,57 +38,45 @@ public class Chapter {
     private int position9Code;
     private int memeberCode;
     private String school;
-    private Dictionary<String, Integer> positions;
+    private int district;
 
     public Chapter() {
-        positions.put("author",1);
-        positions.put("president",2);
-        positions.put("advisor",2);
-        positions.put("eboard",3);
-        positions.put("officer",4);
-        positions.put("member",6);
+
     }
 
-    public Chapter(int chapterCode, String school, int district, int memeberCode) {
+    public Chapter(int chapterCode, String school, int district, int presidentCode, int advisorCode) {
         this.chapterCode = chapterCode;
         this.school = school;
         this.district = district;
-        this.memeberCode = memeberCode;
-        positions.put("author",1);
-        positions.put("president",2);
-        positions.put("advisor",2);
-        positions.put("eboard",3);
-        positions.put("officer",4);
-        positions.put("member",6);
-    }
-
-    public Chapter(int chapterCode, String advisorID, String presidentID, int presidentCode, String advisorCode, int vicePresidentCode, int secretaryCode, int tresurerCode, int position1Code, int position2Code, int position3Code, int position4Code, int position5Code, int position6Code, int position7Code, int position8Code, int position9Code, int memeberCode, String school, int district) {
-        this.chapterCode = chapterCode;
-        this.advisorID = advisorID;
-        this.presidentID = presidentID;
         this.presidentCode = presidentCode;
         this.advisorCode = advisorCode;
-        this.vicePresidentCode = vicePresidentCode;
-        this.secretaryCode = secretaryCode;
-        this.tresurerCode = tresurerCode;
-        this.position1Code = position1Code;
-        this.position2Code = position2Code;
-        this.position3Code = position3Code;
-        this.position4Code = position4Code;
-        this.position5Code = position5Code;
-        this.position6Code = position6Code;
-        this.position7Code = position7Code;
-        this.position8Code = position8Code;
-        this.position9Code = position9Code;
-        this.memeberCode = memeberCode;
-        this.school = school;
-        this.district = district;
-        positions.put("author",1);
-        positions.put("president",2);
-        positions.put("advisor",2);
-        positions.put("eboard",3);
-        positions.put("officer",4);
-        positions.put("member",6);
+        advisorID="";
+        presidentID="";
+        vicePresidentID="";
+        secretaryID="";
+        tresurerID="";
+        position1ID="";
+        position2ID="";
+        position3ID="";
+        position4ID="";
+        position5ID="";
+        position6ID="";
+        position7ID="";
+        position8ID="";
+        position9ID="";
+        vicePresidentCode=0;
+        secretaryCode=0;
+        tresurerCode=0;
+        memeberCode=0;
+        position1Code=0;
+        position2Code=0;
+        position3Code=0;
+        position4Code=0;
+        position5Code=0;
+        position6Code=0;
+        position7Code=0;
+        position8Code=0;
+        position9Code=0;
     }
 
     public int getChapterCode() {
@@ -195,14 +183,6 @@ public class Chapter {
         this.position7ID = position7ID;
     }
 
-    public String getPosition9ID() {
-        return position9ID;
-    }
-
-    public void setPosition9ID(String position9ID) {
-        this.position9ID = position9ID;
-    }
-
     public String getPosition8ID() {
         return position8ID;
     }
@@ -211,11 +191,19 @@ public class Chapter {
         this.position8ID = position8ID;
     }
 
-    public String getAdvisorCode() {
+    public String getPosition9ID() {
+        return position9ID;
+    }
+
+    public void setPosition9ID(String position9ID) {
+        this.position9ID = position9ID;
+    }
+
+    public int getAdvisorCode() {
         return advisorCode;
     }
 
-    public void setAdvisorCode(String advisorCode) {
+    public void setAdvisorCode(int advisorCode) {
         this.advisorCode = advisorCode;
     }
 
@@ -347,7 +335,6 @@ public class Chapter {
         this.district = district;
     }
 
-    private int district;
 
 }
 
