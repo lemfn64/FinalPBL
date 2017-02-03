@@ -8,6 +8,7 @@
 
     <!-- Strings related to codes -->
     <string name="main_chapter">1234567</string>
+    <string name="error_repeated_code">The code exists on chapter or on the submitted codes</string>
 
     <!-- Strings related to login and Sign up -->
     <string name="title_activity_login">Sign in</string>

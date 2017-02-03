@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * Created by Luis on 1/28/2017.
  */
 
-public class DiscusionUI extends Fragment {
+public class AnnouncementUI extends Fragment {
 
     private ListView list;
     private DatabaseReference postsDatabase;
@@ -32,7 +32,7 @@ public class DiscusionUI extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.discusion, container, false);
+        View rootView = inflater.inflate(R.layout.announcement, container, false);
         return rootView;
     }
 

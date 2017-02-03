@@ -157,8 +157,8 @@ public class MainMenu extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    DiscusionUI discusionUI = new DiscusionUI();
-                    return discusionUI;
+                    AnnouncementUI announcementUI = new AnnouncementUI();
+                    return announcementUI;
                 case 1:
                     Calendar calendar = new Calendar();
                     return calendar;
@@ -166,7 +166,7 @@ public class MainMenu extends AppCompatActivity {
                     ChapterUI chapterUI = new ChapterUI();
                     return chapterUI;
                 case 3:
-                    Test test = new Test();
+                    DiscucionUI test = new DiscucionUI();
                     return test;
             }
             return null;
@@ -187,13 +187,13 @@ public class MainMenu extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "discusion";
+                    return "updates";
                 case 1:
                     return "calendar";
                 case 2:
                     return "chapter";
                 case 3:
-                    return "test";
+                    return "discucion";
             }
             return null;
         }

@@ -79,6 +79,7 @@ public class Chapter {
         position9Code=0;
     }
 
+
     public int getChapterCode() {
         return chapterCode;
     }

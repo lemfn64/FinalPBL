@@ -199,6 +199,7 @@ public class ChapterUI extends Fragment {
                 startActivity(new Intent(ChapterUI.this.getContext(), ChapterManagment.class));
 
             } else if(((String)v.getTag()).equals("Change Positions Codes")) {
+                startActivity(new Intent(ChapterUI.this.getContext(), OfficerCodes.class));
 
             }
             else if(((String)v.getTag()).equals("Create a Discussion")) {
