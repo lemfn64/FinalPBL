@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by Luis on 1/28/2017.
@@ -28,6 +29,7 @@ public class AnnouncementUI extends Fragment {
 
     private ListView list;
     private DatabaseReference postsDatabase;
+    private ArrayList<Post> posts = new ArrayList<Post>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,21 +49,22 @@ public class AnnouncementUI extends Fragment {
 
     public class AdapterOrganizer extends BaseAdapter {
 
-        private ArrayList<Post> posts;
         Context context;
 
         public AdapterOrganizer(Context context) {
-            posts= new ArrayList<Post>();
             postsDatabase = FirebaseDatabase.getInstance().getReference().child("posts");
             this.context =context;
             ValueEventListener postsListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot postsSnapshot) {
-                    posts= new ArrayList<Post>();
-                    for (DataSnapshot postSnapshot: postsSnapshot.getChildren()) {
-                        Post temp = postSnapshot.getValue(Post.class);
-                         posts.add(temp);
-                    }
+                        posts = new ArrayList<Post>();
+                        for (DataSnapshot postSnapshot : postsSnapshot.getChildren()) {
+                            Post temp = postSnapshot.getValue(Post.class);
+                            if (temp.getChapterCode() == MainMenu.userInfo.getChapterCode() || temp.getChapterCode() == Integer.parseInt(getString(R.string.main_chapter))) {
+                                posts.add(temp);
+                            }
+                            notifyDataSetChanged();
+                        }
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -69,7 +72,7 @@ public class AnnouncementUI extends Fragment {
                     Log.d("get posts", "loadPost:onCancelled", databaseError.toException());
                 }
             };
-            postsDatabase.addValueEventListener(postsListener);
+            postsDatabase.addListenerForSingleValueEvent(postsListener);
         }
 
         @Override
@@ -107,7 +110,7 @@ public class AnnouncementUI extends Fragment {
             else {
                 chapter_image.setImageResource(android.R.drawable.presence_online);
             }
-            return null;
+            return row;
         }
     }
 }

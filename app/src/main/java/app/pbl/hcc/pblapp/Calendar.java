@@ -130,13 +130,15 @@ public class Calendar extends Fragment {
             ValueEventListener eventsListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot postsSnapshot) {
-                    events= new ArrayList<Event>();
-                    views = new ArrayList<View>();
-                    for (DataSnapshot postSnapshot: postsSnapshot.getChildren()) {
-                        Event temp = postSnapshot.getValue(Event.class);
-                        events.add(temp);
+                    if(isAdded()) {
+                        events = new ArrayList<Event>();
+                        views = new ArrayList<View>();
+                        for (DataSnapshot postSnapshot : postsSnapshot.getChildren()) {
+                            Event temp = postSnapshot.getValue(Event.class);
+                            events.add(temp);
+                        }
+                        Collections.sort(events, new dateComparator());
                     }
-                    Collections.sort(events, new dateComparator());
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
