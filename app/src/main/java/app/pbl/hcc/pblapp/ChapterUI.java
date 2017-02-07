@@ -208,6 +208,7 @@ public class ChapterUI extends Fragment {
 
             }
             else if(((String)v.getTag()).equals("Make an Event")) {
+                startActivity(new Intent(ChapterUI.this.getContext(), EventUI.class));
 
             }
         }

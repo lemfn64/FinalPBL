@@ -40,6 +40,10 @@
         <activity
             android:name=".CreatAnnouncements"
             android:label="@string/title_activity_creat_announcements"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EventUI"
+            android:label="@string/title_activity_event_ui"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
