@@ -154,6 +154,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                     Log.d("auth", "automatic");
                                     MainMenu.logged=true;
                                     MainMenu.userInfo = new User(storage.getString("user", null), storage.getString("password", null), storage.getString("name", null), storage.getInt("chapterCode", 999), storage.getInt("position", 999));
+                                    showProgress(false);
+                                    finish();
                                 }
                                 else {
                                     Log.d("auth", "not auto");
@@ -169,6 +171,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                                 editor.putString("name", MainMenu.userInfo.getName());
                                                 editor.putInt("postion", MainMenu.userInfo.getPosition());
                                                 editor.putInt("chapterCode", MainMenu.userInfo.getChapterCode());
+                                                editor.commit();
                                                 Log.d("auth", storage.getString("user", null));
                                             } else {
                                                 editor.putString("user", null);
@@ -176,6 +179,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                                 editor.putString("name", null);
                                                 editor.putInt("chapterCode", 999);
                                                 editor.putInt("position", 999);
+                                                editor.commit();
                                             }
                                             showProgress(false);
                                             finish();

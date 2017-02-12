@@ -73,7 +73,7 @@
                 android:hint="Time"
                 android:imeOptions="actionUnspecified"
                 android:visibility="visible"
-                android:inputType="text"
+                android:inputType="time"
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>

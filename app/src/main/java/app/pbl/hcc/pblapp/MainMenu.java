@@ -25,6 +25,9 @@ public class MainMenu extends AppCompatActivity {
     private ViewPager mViewPager;
     public static boolean logged = false;
     public static User userInfo;
+    public static Event clickEvent;
+    public static Post clickPost;
+    public static String clickPostReference;
     private SharedPreferences storage;
     public static boolean runing=false;
 
@@ -62,6 +65,7 @@ public class MainMenu extends AppCompatActivity {
             // start log in
             startActivity(new Intent(MainMenu.this, LoginActivity.class));
         }
+
     }
 
     public static boolean isRuning() {
@@ -128,6 +132,7 @@ public class MainMenu extends AppCompatActivity {
                 editor.putString("name", null);
                 editor.putInt("chapterCode", 999);
                 editor.putInt("position", 999);
+                editor.commit();
                 startActivity(new Intent(this, LoginActivity.class));
             }
             else {
@@ -165,9 +170,9 @@ public class MainMenu extends AppCompatActivity {
                 case 2:
                     ChapterUI chapterUI = new ChapterUI();
                     return chapterUI;
-                case 3:
+                /**case 3:
                     DiscucionUI test = new DiscucionUI();
-                    return test;
+                    return test;*/
             }
             return null;
         }
@@ -175,7 +180,7 @@ public class MainMenu extends AppCompatActivity {
         @Override
         public int getCount() {
             // number of tabs
-            return 4;
+            return 3;
         }
 
         /**
@@ -192,8 +197,8 @@ public class MainMenu extends AppCompatActivity {
                     return "calendar";
                 case 2:
                     return "chapter";
-                case 3:
-                    return "discucion";
+                /**case 3:
+                    return "discucion";*/
             }
             return null;
         }

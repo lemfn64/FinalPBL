@@ -9,13 +9,16 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/pbl_logo"
         android:label="@string/app_name"
+        android:logo="@drawable/pbl_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainMenu"
+            android:icon="@drawable/pbl_logo"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,25 +28,48 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".SignUpActivity"
-            android:label="@string/title_activity_sign_up" />
+            android:label="@string/title_activity_sign_up"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ChapterManagment"
             android:label="@string/title_activity_chapter_managment"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".OfficerCodes"
             android:label="@string/title_activity_officer_codes"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CreatAnnouncements"
             android:label="@string/title_activity_creat_announcements"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EventUI"
             android:label="@string/title_activity_event_ui"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EventDisplayer"
+            android:label="@string/title_activity_event_displayer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PostDisplayer"
+            android:label="@string/title_activity_post_displayer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddComment"
+            android:label="@string/title_activity_add_comment"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Help"
+            android:label="@string/title_activity_help"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -1,6 +1,7 @@
 package app.pbl.hcc.pblapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -30,6 +31,8 @@ public class AnnouncementUI extends Fragment {
     private ListView list;
     private DatabaseReference postsDatabase;
     private ArrayList<Post> posts = new ArrayList<Post>();
+    private ArrayList<String> reference = new ArrayList<String>();
+    private View.OnClickListener onClick;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +46,9 @@ public class AnnouncementUI extends Fragment {
     public void onResume() {
         super.onResume();
         list= (ListView) getView().findViewById(R.id.list_view);
+        onClick = new AnnouncementUI.OnClick();
         list.setAdapter(new AdapterOrganizer(this.getContext()));
+
     }
 
 
@@ -57,10 +62,12 @@ public class AnnouncementUI extends Fragment {
             ValueEventListener postsListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot postsSnapshot) {
-                        posts = new ArrayList<Post>();
+                    posts = new ArrayList<Post>();
+                    reference = new ArrayList<String>();
                         for (DataSnapshot postSnapshot : postsSnapshot.getChildren()) {
                             Post temp = postSnapshot.getValue(Post.class);
                             if (temp.getChapterCode() == MainMenu.userInfo.getChapterCode() || temp.getChapterCode() == Integer.parseInt(getString(R.string.main_chapter))) {
+                                reference.add(postSnapshot.getKey());
                                 posts.add(temp);
                             }
                             notifyDataSetChanged();
@@ -104,6 +111,8 @@ public class AnnouncementUI extends Fragment {
             TextView summary = (TextView) row.findViewById(R.id.txt_content);
             summary.setText(posts.get(position).getAbstaract());
             ImageView chapter_image = (ImageView) row.findViewById(R.id.info_icon);
+            row.setTag(position);
+            row.setOnClickListener(onClick);
             if (posts.get(position).getChapterCode()== MainMenu.userInfo.getChapterCode()) {
                 chapter_image.setImageResource(android.R.drawable.star_big_on);
             }
@@ -112,5 +121,16 @@ public class AnnouncementUI extends Fragment {
             }
             return row;
         }
+    }
+
+    private class OnClick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            MainMenu.clickPost=posts.get((int)v.getTag());
+            MainMenu.clickPostReference= reference.get((int)v.getTag());
+            startActivity(new Intent(AnnouncementUI.this.getContext(), PostDisplayer.class));
+        }
+
     }
 }

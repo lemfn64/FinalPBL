@@ -9,6 +9,7 @@
 
     <TextView
         android:text="Chapter information"
+        android:textColor="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
@@ -123,6 +124,7 @@
     <TextView
         android:text="Chapter Modifications"
         android:layout_width="wrap_content"
+        android:textColor="@color/colorPrimary"
         android:layout_height="wrap_content"
         android:layout_below="@+id/info_treasurer"
         android:layout_marginBottom="12dp"

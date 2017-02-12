@@ -5,6 +5,16 @@
     <string name="action_log">Log In</string>
     <string name="action_log_out">Log Out</string>
     <string name="action_chapter">Mannage Chapter</string>
+    <string name="title_activity_chapter_managment">Chapter Managment</string>
+
+    <string name="title_activity_officer_codes">Officer Codes</string>
+    <string name="title_activity_creat_announcements">Creat an Announcement</string>
+    <string name="title_activity_event_ui">New Event</string>
+    <string name="title_activity_event_displayer">Event</string>
+
+    <string name="title_activity_post_displayer">Post</string>
+    <string name="title_activity_add_comment">Add Comment</string>
+    <string name="title_activity_help">Help</string>
 
     <!-- Strings related to codes -->
     <string name="main_chapter">1234567</string>
@@ -32,11 +42,7 @@
     </string>
     <string name="title_activity_sign_up">Sign up</string>
     <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="title_activity_chapter_managment">Chapter Managment</string>
 
-    <string name="title_activity_officer_codes">Officer Codes</string>
-    <string name="title_activity_creat_announcements">Creat an Announcement</string>
-    <string name="title_activity_event_ui">New Event</string>
 
 
 </resources>

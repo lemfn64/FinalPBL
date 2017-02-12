@@ -1,6 +1,7 @@
 package app.pbl.hcc.pblapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -38,6 +39,8 @@ public class Calendar extends Fragment {
     private List<Event> events;
     private ArrayList<View> views;
     private boolean firstRun =true;
+    private AdapterOrganizer adapter;
+    private View.OnClickListener onClick;
 
     /**
      * creats view when called on main menu
@@ -62,16 +65,20 @@ public class Calendar extends Fragment {
     public void onResume() {
         super.onResume();
         datePicker = (CalendarView) getView().findViewById(R.id.calendarView);
-        datePicker.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                eventDisplayer(year,month,dayOfMonth);
-            }
-        });
         list = (ListView) getView().findViewById(R.id.list);
-        list.setAdapter( new Calendar.AdapterOrganizer(this.getContext()));
+        list.setItemsCanFocus(true);
+        onClick = new OnClick();
+        adapter = new Calendar.AdapterOrganizer(this.getContext());
+        list.setAdapter(adapter);
         java.util.Calendar timer = java.util.Calendar.getInstance();
         datePicker.setDate(timer.getTimeInMillis());
         eventDisplayer(timer.get(java.util.Calendar.YEAR), timer.get(java.util.Calendar.MONTH),timer.get(java.util.Calendar.DAY_OF_MONTH));
+        datePicker.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                Log.d("calendar","called");
+                eventDisplayer(year,month,dayOfMonth);
+            }
+        });
     }
 
     /**
@@ -82,41 +89,20 @@ public class Calendar extends Fragment {
      */
     public void eventDisplayer(int year, int month, int day){
         int date = (year*365)+((month+1)*30)+(day);
-        int datePlus = date;
-        int dateMinus = date;
+        int difference = 99999;
+        int keeper=0;
         int indicator=0;
-        boolean found = false;
         for(Event choosen: events) {
-            if(!found){
-                if(choosen.getDate()==date) {
-                    found= true;
-                }
-                indicator++;
+            if(difference>Math.abs(choosen.getDate()-date)) {
+                keeper=indicator;
+                difference= Math.abs(choosen.getDate()-date);
+                Log.d("calendar", String.valueOf(difference));
             }
-        }
-        if(!found){
-            indicator=0;
-            for(Event choosen: events) {
-                if(!found){
-                    if(choosen.getDate()==datePlus) {
-                        found= true;
-                    }
-                    else {
-                        if(choosen.getDate()==dateMinus){
-                            found = true;
-                        }
-                    }
-                    datePlus++;
-                    dateMinus--;
-                    indicator++;
-                }
-            }
-        }
-        if(!found) {
-            indicator=0;
+            indicator++;
         }
         if(!views.isEmpty()){
-            views.get(indicator).requestFocus();
+            Log.d("calendar", "focus");
+            //list.findViewById(views.get(keeper).getId()).requestFocus();
         }
     }
 
@@ -135,7 +121,9 @@ public class Calendar extends Fragment {
                         views = new ArrayList<View>();
                         for (DataSnapshot postSnapshot : postsSnapshot.getChildren()) {
                             Event temp = postSnapshot.getValue(Event.class);
-                            events.add(temp);
+                            if (temp.getChapterCode() == MainMenu.userInfo.getChapterCode() || temp.getChapterCode() == Integer.parseInt(getString(R.string.main_chapter))) {
+                                events.add(temp);
+                            }
                         }
                         Collections.sort(events, new dateComparator());
                     }
@@ -175,6 +163,17 @@ public class Calendar extends Fragment {
             TextView time = (TextView) row.findViewById(R.id.txt_time);
             time.setText(events.get(position).getTime());
             TextView summary = (TextView) row.findViewById(R.id.txt_content);
+            TextView date = (TextView) row.findViewById(R.id.date_txt);
+            int numberDate = events.get(position).getDate();
+            int year = numberDate/365;
+            numberDate= numberDate%365;
+            int month = numberDate/30;
+            numberDate=numberDate%30;
+            int days = numberDate;
+            row.setTag(position);
+            row.setId(position);
+            row.setOnClickListener(onClick);
+            date.setText(String.valueOf(month)+"/"+String.valueOf(days)+"/"+String.valueOf(year));
             summary.setText(events.get(position).getContent());
             ImageView chapter_image = (ImageView) row.findViewById(R.id.info_icon);
             if (events.get(position).getChapterCode()== MainMenu.userInfo.getChapterCode()) {
@@ -184,7 +183,7 @@ public class Calendar extends Fragment {
                 chapter_image.setImageResource(android.R.drawable.presence_online);
             }
             views.add(row);
-            return null;
+            return row;
         }
     }
 
@@ -193,5 +192,15 @@ public class Calendar extends Fragment {
         public int compare(Event a, Event b) {
             return a.getDate()< b.getDate() ? -1 : a.getDate() == b.getDate() ? 0 : 1;
         }
+    }
+
+    private class OnClick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            MainMenu.clickEvent=events.get((int)v.getTag());
+            startActivity(new Intent(Calendar.this.getContext(), EventDisplayer.class));
+        }
+
     }
 }

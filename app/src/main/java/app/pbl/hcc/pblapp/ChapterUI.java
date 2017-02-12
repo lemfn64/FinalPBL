@@ -74,7 +74,7 @@ public class ChapterUI extends Fragment {
                 if(isAdded()) {
                     for (DataSnapshot postSnapshot : postsSnapshot.getChildren()) {
                         if (Integer.parseInt(postSnapshot.getKey()) == MainMenu.userInfo.getChapterCode()) {
-                            Log.d("found chpater", "hola");
+                            Log.d("found chapter", "hola");
                             baseChapter = postSnapshot.getValue(Chapter.class);
                         }
                     }
@@ -83,18 +83,15 @@ public class ChapterUI extends Fragment {
                         privilage = 4;
                         modifications.add("Create Chapter");
                         modifications.add("Change Positions Codes");
-                        modifications.add("Create a Discussion");
                         modifications.add("Make an Announcement");
                         modifications.add("Make an Event");
                     } else if (baseChapter.getAdvisorID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getPresidentID().equals(MainMenu.userInfo.getEmail().replace(".", "@"))) {
                         privilage = 3;
                         modifications.add("Change Positions Codes");
-                        modifications.add("Create a Discussion");
                         modifications.add("Make an Announcement");
                         modifications.add("Make an Event");
                     } else if (baseChapter.getVicePresidentID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getSecretaryID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getTresurerID().equals(MainMenu.userInfo.getEmail().replace(".", "@"))) {
                         privilage = 2;
-                        modifications.add("Create a Discussion");
                         modifications.add("Make an Announcement");
                         modifications.add("Make an Event");
                     } else if (baseChapter.getPosition1ID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getPosition2ID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getPosition3ID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getPosition4ID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getPosition5ID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getPosition6ID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getPosition7ID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getPosition8ID().equals(MainMenu.userInfo.getEmail().replace(".", "@")) || baseChapter.getPosition9ID().equals(MainMenu.userInfo.getEmail().replace(".", "@"))) {
@@ -198,9 +195,6 @@ public class ChapterUI extends Fragment {
 
             } else if(((String)v.getTag()).equals("Change Positions Codes")) {
                 startActivity(new Intent(ChapterUI.this.getContext(), OfficerCodes.class));
-
-            }
-            else if(((String)v.getTag()).equals("Create a Discussion")) {
 
             }
             else if(((String)v.getTag()).equals("Make an Announcement")) {

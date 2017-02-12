@@ -18,8 +18,10 @@
 
             <CalendarView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="320dp"
                 android:layout_alignParentStart="true"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
                 android:id="@+id/calendarView" />
 
             <ListView

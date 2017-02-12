@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ public class EventUI extends AppCompatActivity {
     private DatePicker date;
     private EditText description;
     private Button create;
-    private DatabaseReference postsDatabase;
+    private DatabaseReference eventDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,17 @@ public class EventUI extends AppCompatActivity {
         date = (DatePicker)findViewById(R.id.datePicker);
         description = (EditText)findViewById(R.id.event_description);
         create = (Button) findViewById(R.id.create_event);
+        create.setOnClickListener(new OnClick());
+        eventDatabase = FirebaseDatabase.getInstance().getReference().child("events");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private class OnClick implements View.OnClickListener{
@@ -94,9 +107,11 @@ public class EventUI extends AppCompatActivity {
                 temp.setContent(description.getText().toString());
             }
 
-
             if(!error) {
-                //pasar al la nuve
+                temp.setDate((date.getYear()*365)+((date.getMonth()+1)*30)+(date.getDayOfMonth()));
+                temp.setChapterCode(MainMenu.userInfo.getChapterCode());
+                eventDatabase.child(String.valueOf(temp.getChapterCode())+System.currentTimeMillis()).setValue(temp);
+                finish();
             }
 
 

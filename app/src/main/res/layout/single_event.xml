@@ -31,20 +31,6 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_title"
-        android:id="@+id/txt_place"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:textSize="10dp"
-        android:maxLines="1"
-        android:layout_alignStart="@+id/txt_title" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_below="@+id/txt_place"
         android:id="@+id/txt_content"
         android:layout_marginLeft="4dp"
@@ -76,4 +62,66 @@
         android:maxLines="1"
         android:layout_above="@+id/txt_content"
         android:layout_toStartOf="@+id/imageView2" />
+
+    <TextView
+        android:text="Time:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:textSize="10dp"
+        android:maxLines="1"
+        android:id="@+id/textView4"
+        android:layout_alignBaseline="@+id/txt_time"
+        android:layout_alignBottom="@+id/txt_time"
+        android:layout_toStartOf="@+id/txt_time" />
+
+    <TextView
+        android:text="Place:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:textSize="10dp"
+        android:maxLines="1"
+        android:id="@+id/textView8"
+        android:layout_below="@+id/txt_title"
+        android:layout_alignStart="@+id/txt_content" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_place"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:textSize="10dp"
+        android:maxLines="1"
+        android:layout_below="@+id/txt_title"
+        android:layout_toEndOf="@+id/textView8" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:textSize="10dp"
+        android:maxLines="1"
+        android:layout_above="@+id/txt_time"
+        android:layout_toEndOf="@+id/textView4"
+        android:id="@+id/date_txt" />
+
+    <TextView
+        android:text="Date:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:textSize="10dp"
+        android:maxLines="1"
+        android:id="@+id/textView9"
+        android:layout_above="@+id/textView4"
+        android:layout_toStartOf="@+id/txt_time" />
+
 </RelativeLayout>
