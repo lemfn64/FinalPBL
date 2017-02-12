@@ -15,44 +15,53 @@
     tools:showIn="@layout/activity_help">
 
     <TextView
-        android:text="TextView"
+        android:text="Summit an error report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_margin="5dp"
         android:id="@+id/textView12"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <TextView
-        android:text="TextView"
+        android:text="Please fill the form bellow to summit a error report."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="3dp"
         android:id="@+id/textView18"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
     <TextView
-        android:text="TextView"
+        android:text="Rate the app"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:id="@+id/textView19"
         android:textAppearance="@style/TextAppearance.AppCompat" />
 
     <RatingBar
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="3dp"
         android:id="@+id/ratingBar"
         android:numStars="5"
-        android:stepSize="0.5" />
+        android:stepSize="1" />
 
     <TextView
-        android:text="TextView"
+        android:text="Report Description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:id="@+id/textView20"
         android:textAppearance="@style/TextAppearance.AppCompat" />
 
     <TextView
-        android:text="TextView"
+        android:text="Describe what did not work or what would you like to be improved. If you are submitting an error report, please narrate what were you doing when the error occurred."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:maxLines="4"
         android:id="@+id/textView21" />
 
     <android.support.design.widget.TextInputLayout
@@ -63,7 +72,7 @@
             android:id="@+id/problem_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Problem description"
+            android:hint="Description"
             android:imeOptions="actionUnspecified"
             android:visibility="visible"
             android:inputType="textMultiLine"
@@ -72,15 +81,18 @@
     </android.support.design.widget.TextInputLayout>
 
     <TextView
-        android:text="TextView"
+        android:text="After summiting your report, you will recieve a email addresing the problem on your accounts's email."
         android:layout_width="match_parent"
+        android:layout_margin="2dp"
         android:layout_height="wrap_content"
         android:id="@+id/textView22" />
 
     <Button
-        android:text="Button"
-        android:layout_width="match_parent"
+        android:text="Summit Report"
+        android:layout_width="wrap_content"
+        android:layout_margin="3dp"
+        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:id="@+id/button2" />
+        android:id="@+id/summit_report" />
 
 </LinearLayout>

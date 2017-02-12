@@ -113,13 +113,19 @@ public class MainMenu extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_account) {
+        //performs actions depending on which menu tab is clicked
+       /* if (id == R.id.action_account) {
             if (!logged) {
                 startActivity(new Intent(this, LoginActivity.class));
             } else {
-                    return true;
-                // go to manage account
+                 startActivity( new Intent(this, Account.class));
+            }
+        }*/
+        if (id == R.id.action_help) {
+            if (!logged) {
+                startActivity(new Intent(this, LoginActivity.class));
+            } else {
+                startActivity(new Intent(this, Help.class));
             }
         }
         if(id==R.id.action_log){
@@ -145,7 +151,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     /**
-     * page adopter used to mannage Fragments, its contents and views
+     * page adapter used to mannage Fragments, its contents and views
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
