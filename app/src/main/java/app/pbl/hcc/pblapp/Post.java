@@ -1,7 +1,7 @@
 package app.pbl.hcc.pblapp;
 
 /**
- * Created by Luis on 1/30/2017.
+ * object representation of a post or announcement
  */
 
 public class Post {

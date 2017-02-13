@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * display the info of a event
+ */
 public class EventDisplayer extends AppCompatActivity {
 
     private TextView author;
@@ -20,7 +23,10 @@ public class EventDisplayer extends AppCompatActivity {
     private TextView description;
     private  Event event;
 
-
+    /**
+     * sets xml file for activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +35,9 @@ public class EventDisplayer extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    /**
+     * set code reference for gui elements and date
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -53,6 +62,12 @@ public class EventDisplayer extends AppCompatActivity {
         date.setText(String.valueOf(month)+"/"+String.valueOf(days)+"/"+String.valueOf(year));
     }
 
+    /**
+     * finishes activity on back key press
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {

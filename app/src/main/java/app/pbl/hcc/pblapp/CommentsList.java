@@ -3,7 +3,7 @@ package app.pbl.hcc.pblapp;
 import java.util.ArrayList;
 
 /**
- * Created by Luis on 2/9/2017.
+ * object structure that conatins a list of comments
  */
 
 public class CommentsList {

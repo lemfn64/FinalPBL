@@ -106,6 +106,9 @@ public class Calendar extends Fragment {
         }
     }
 
+    /**
+     * This class orgaices a list of objects into a scrolable list view
+     */
     public class AdapterOrganizer extends BaseAdapter {
 
         Context context;
@@ -152,6 +155,13 @@ public class Calendar extends Fragment {
             return position;
         }
 
+        /**
+         * sets informations on the view
+         * @param position
+         * @param convertView
+         * @param parent
+         * @return
+         */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -187,6 +197,9 @@ public class Calendar extends Fragment {
         }
     }
 
+    /**
+     * use to order events by date
+     */
     class dateComparator implements Comparator<Event> {
         @Override
         public int compare(Event a, Event b) {
@@ -194,6 +207,9 @@ public class Calendar extends Fragment {
         }
     }
 
+    /**
+     * on click listener use to display event info
+     */
     private class OnClick implements View.OnClickListener {
 
         @Override

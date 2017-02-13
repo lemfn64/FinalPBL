@@ -16,6 +16,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * class to be implemented on the future to enable the user to dynamically change chapter and positions
+ */
 public class Account extends AppCompatActivity {
     private EditText newPosition;
     private  EditText newChapter;
@@ -31,6 +34,11 @@ public class Account extends AppCompatActivity {
     private int position;
     private int chapterCode;
 
+
+    /**
+     * called when the activity starts. it sets data base paths
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +49,9 @@ public class Account extends AppCompatActivity {
         chapterDatabase = FirebaseDatabase.getInstance().getReference().child("chapters");
     }
 
+    /**
+     * called when activity is shown to user. sets gui elements to code and listeners
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -54,6 +65,9 @@ public class Account extends AppCompatActivity {
         updatePosition.setOnClickListener(click);
     }
 
+    /**
+     * dictates the behaviors of a click and sets the changes on the respective object on data base
+     */
     private class OnClick implements View.OnClickListener {
 
         @Override

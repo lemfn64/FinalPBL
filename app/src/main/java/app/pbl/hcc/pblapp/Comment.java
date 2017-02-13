@@ -1,7 +1,7 @@
 package app.pbl.hcc.pblapp;
 
 /**
- * Created by Luis on 2/9/2017.
+ * object for a comment
  */
 
 public class Comment {

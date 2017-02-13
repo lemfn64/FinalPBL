@@ -20,6 +20,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+/**
+ * class use to create events
+ */
 public class EventUI extends AppCompatActivity {
 
     private EditText title;
@@ -31,6 +34,10 @@ public class EventUI extends AppCompatActivity {
     private Button create;
     private DatabaseReference eventDatabase;
 
+    /**
+     * sets xml file for activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +47,9 @@ public class EventUI extends AppCompatActivity {
 
     }
 
+    /**
+     * link gui elements to code
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -54,6 +64,12 @@ public class EventUI extends AppCompatActivity {
         eventDatabase = FirebaseDatabase.getInstance().getReference().child("events");
     }
 
+    /**
+     * finishes activity when back key is pressed
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {
@@ -63,6 +79,9 @@ public class EventUI extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    /**
+     * checks for empty fields and uploads info to data base
+     */
     private class OnClick implements View.OnClickListener{
         private boolean error;
 

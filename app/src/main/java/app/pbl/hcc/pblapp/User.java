@@ -1,7 +1,7 @@
 package app.pbl.hcc.pblapp;
 
 /**
- * Created by Luis on 1/29/2017.
+ * object representation of a user
  */
 
 public class User {

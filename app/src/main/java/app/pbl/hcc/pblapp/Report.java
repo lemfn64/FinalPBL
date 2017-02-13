@@ -1,7 +1,7 @@
 package app.pbl.hcc.pblapp;
 
 /**
- * Created by Luis on 2/12/2017.
+ * object representation of a error report
  */
 
 public class Report {

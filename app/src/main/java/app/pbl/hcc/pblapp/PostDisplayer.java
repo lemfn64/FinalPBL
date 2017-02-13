@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * displays posts info
+ */
 public class PostDisplayer extends AppCompatActivity {
     private Button addComments;
     private ListView list;
@@ -39,6 +42,10 @@ public class PostDisplayer extends AppCompatActivity {
     private CommentsList commentsList;
     private PostDisplayer.AdapterOrganizer adapter;
 
+    /**
+     * sets xml file
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +55,9 @@ public class PostDisplayer extends AppCompatActivity {
         comments= new ArrayList<Comment>();
     }
 
+    /**
+     * sets gui elements in code and gets initial coment list
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -87,6 +97,9 @@ public class PostDisplayer extends AppCompatActivity {
         list.setAdapter(adapter);
     }
 
+    /**
+     * click for button to add comment activity
+     */
     private class OnClick implements View.OnClickListener {
 
         @Override
@@ -96,6 +109,12 @@ public class PostDisplayer extends AppCompatActivity {
 
     }
 
+    /**
+     * finishes activity on key press
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {

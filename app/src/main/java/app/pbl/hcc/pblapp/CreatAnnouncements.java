@@ -15,6 +15,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+/**
+ * activity where the users fill the information for a event
+ */
 public class CreatAnnouncements extends AppCompatActivity {
 
     private EditText title;
@@ -25,6 +28,11 @@ public class CreatAnnouncements extends AppCompatActivity {
     private DatabaseReference postsDatabase;
     private onClick click;
 
+
+    /**
+     * sets xml file for activity and database path
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +43,9 @@ public class CreatAnnouncements extends AppCompatActivity {
 
     }
 
+    /**
+     * sets gui elemnts reference incode and creats listener
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -47,6 +58,12 @@ public class CreatAnnouncements extends AppCompatActivity {
         create.setOnClickListener(click);
     }
 
+    /**
+     * finishes activity on back key press
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {
@@ -56,6 +73,9 @@ public class CreatAnnouncements extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    /**
+     * sets the listener action, checks for empty fields and upload infor to database
+     */
     private class onClick implements View.OnClickListener {
 
         public onClick() {

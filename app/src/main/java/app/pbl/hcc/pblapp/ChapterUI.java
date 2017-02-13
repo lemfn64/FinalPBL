@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 /**
- * Created by Luis on 1/28/2017.
+ * This class shows chapter informationand depending on posiont inside the chapter it alouds modifications to be made to
  */
 
 public class ChapterUI extends Fragment {
@@ -42,6 +42,13 @@ public class ChapterUI extends Fragment {
     public static int privilage;
     private View.OnClickListener click;
 
+    /**
+     * sets the xml files for the activity and sets database paths
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,7 +59,9 @@ public class ChapterUI extends Fragment {
 
     }
 
-
+    /**
+     * sets gui elemets to code and shows options depending on your position
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -142,6 +151,9 @@ public class ChapterUI extends Fragment {
 
     }
 
+    /**
+     * shows objects form a array in a list view
+     */
     public class AdapterOrganizer extends BaseAdapter {
 
         Context context;
@@ -169,6 +181,13 @@ public class ChapterUI extends Fragment {
             return position;
         }
 
+        /**
+         * sets what information goes on the view
+         * @param position
+         * @param convertView
+         * @param parent
+         * @return
+         */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -181,6 +200,9 @@ public class ChapterUI extends Fragment {
         }
     }
 
+    /**
+     * seta listener that will take you to diferent activities depnding on whcih modifications you want to make
+     */
     private class onClicker implements View.OnClickListener {
         View temp;
 

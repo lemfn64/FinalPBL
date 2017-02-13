@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private CheckBox remeberView;
+
     private SharedPreferences storage;
     private boolean checked;
     private SharedPreferences.Editor editor;

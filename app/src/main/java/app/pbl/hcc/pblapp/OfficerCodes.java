@@ -18,6 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+/**
+ * this class enables the president or advisor to change member codes
+ */
 public class OfficerCodes extends AppCompatActivity {
 
     private EditText advisorCode;
@@ -41,7 +44,10 @@ public class OfficerCodes extends AppCompatActivity {
     private Chapter chapter;
     private Chapter saved;
 
-
+    /**
+     * sets xml file and get a initial value from database
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +74,9 @@ public class OfficerCodes extends AppCompatActivity {
         chapterDatabase.addListenerForSingleValueEvent(chapterListener);
     }
 
+    /**
+     * link gui elements to code and sets listeners
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -95,6 +104,9 @@ public class OfficerCodes extends AppCompatActivity {
         changeCodes.setOnClickListener(click);
     }
 
+    /**
+     * sets information on a chpater object and uplaods it to database
+     */
     private class onClick implements View.OnClickListener {
         boolean trigger = false;
         boolean repeated = false;
